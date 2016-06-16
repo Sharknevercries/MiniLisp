@@ -1,0 +1,38 @@
+
+// ==========================================================================
+//  GPLEX error listing for lex source file <MiniLisp.Language.analyzer.lex>
+// ==========================================================================
+//  Version:  1.2.2
+//  Machine:  SHARK
+//  DateTime: 6/17/2016 AM 12:47:21
+//  UserName: Zheng-Yuan
+// ==========================================================================
+
+
+%namespace MiniLisp
+%scannertype MiniLispScanner
+%visibility internal
+%tokentype Token
+
+%option stack, minimize, parser, verbose, persistbuffer, noembedbuffers 
+
+Seperator		[\t\n\r ]
+Letter			[a-z]
+Digit			[0-9]
+Number			0|[1-9]{Digit}*|-[1-9]{Digit}*		{}
+//---------------------------------------^^
+// Error: Expected end-of-line here
+// --------------------------------
+Id				{Letter}({Letter}|{Digit}|-)*
+
+%{
+
+%}
+
+%%
+
+{Number}		{	}
+
+
+%%// ==========================================================================
+

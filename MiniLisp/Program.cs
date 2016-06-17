@@ -12,8 +12,7 @@ namespace MiniLisp
     {
         static void Main(string[] args)
         {
-            var parser = new MiniLisp.MiniLispParser();
-            var lexer = new MiniLisp.MiniLispScanner();
+            var parser = new MiniLispParser();
 
             try
             {

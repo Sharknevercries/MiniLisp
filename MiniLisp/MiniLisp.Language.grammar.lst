@@ -1,0 +1,62 @@
+
+// ==========================================================================
+//  GPPG error listing for yacc source file <MiniLisp.Language.grammar.y - 6/17/2016 AM 01:43:26>
+// ==========================================================================
+//  Version:  1.5.2
+//  Machine:  SHARK
+//  DateTime: 6/17/2016 AM 01:44:07
+//  UserName: Zheng-Yuan
+// ==========================================================================
+
+
+%namespace MiniLisp
+%partial
+%parsertype MiniLispParser
+%visibility internal
+%tokentype Token
+
+%union { 
+			public int Value; 
+			public string Str; 
+			public IAST Node;
+	   }
+
+%start program
+
+%token PrintNum, PrintBool
+%token Lp, Rp
+%token Plus, Minus, Multiply, Divide, Modulus
+
+%type <Node> exp, print_stmt, def_stmt
+
+%token <Value> Number
+%token <Str> Str
+
+
+%%
+// Error: NonTerminal symbol "exp" has no productions
+// Warning: Terminating exp fixes the following size-1 NonTerminal set
+   // {exp}
+// Error: There are 1 non-terminating NonTerminal Symbols
+   //  {exp}
+// -------------------------------------------------------------------
+
+program		:	stmts
+			;
+stmts		:	stmts stmt
+			|	stmt
+			;
+stmt		:	exp	{
+			}
+			|	print_stmt {
+			}
+			|	def_stmt {
+			}
+			;
+print_stmt	:	Lp PrintNum
+			;
+def_stmt	:	
+			;
+
+%%// ==========================================================================
+

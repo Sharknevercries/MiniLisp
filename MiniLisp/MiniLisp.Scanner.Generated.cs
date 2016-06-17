@@ -6,9 +6,9 @@
 //
 //  GPLEX Version:  1.2.2
 //  Machine:  SHARK
-//  DateTime: 6/17/2016 AM 12:49:43
+//  DateTime: 6/17/2016 PM 11:34:20
 //  UserName: Zheng-Yuan
-//  GPLEX input file <MiniLisp.Language.analyzer.lex - 6/17/2016 AM 12:48:40>
+//  GPLEX input file <MiniLisp.Language.analyzer.lex - 6/17/2016 PM 09:26:24>
 //  GPLEX frame file <embedded resource>
 //
 //  Option settings: verbose, parser, stack, minimize
@@ -20,6 +20,7 @@
 // Version 1.2.1 of 24-June-2013
 //
 //
+#define BACKUP
 #define STACK
 #define PERSIST
 #define BYTEMODE
@@ -125,8 +126,8 @@ namespace MiniLisp
         
         enum Result {accept, noMatch, contextFound};
 
-        const int maxAccept = 2;
-        const int initial = 3;
+        const int maxAccept = 26;
+        const int initial = 27;
         const int eofNum = 0;
         const int goStart = -1;
         const int INITIAL = 0;
@@ -163,20 +164,83 @@ namespace MiniLisp
         }
     };
 
-    static int[] startState = new int[] {3, 0};
+    static int[] startState = new int[] {27, 0};
 
-    static Table[] NxS = new Table[5] {
+    static Table[] NxS = new Table[41] {
 /* NxS[   0] */ new Table(0, 0, 0, null), // Shortest string ""
-/* NxS[   1] */ new Table(0, 0, -1, null), // Shortest string "0"
-/* NxS[   2] */ // Shortest string "1"
-      new Table(48, 10, -1, new sbyte[] {2, 2, 2, 2, 2, 2, 
-          2, 2, 2, 2}),
-/* NxS[   3] */ // Shortest string ""
-      new Table(45, 13, -1, new sbyte[] {4, -1, -1, 1, 2, 2, 
-          2, 2, 2, 2, 2, 2, 2}),
-/* NxS[   4] */ // Shortest string "-"
-      new Table(49, 9, -1, new sbyte[] {2, 2, 2, 2, 2, 2, 
-          2, 2, 2}),
+/* NxS[   1] */ new Table(0, 0, -1, null), // Shortest string "\x01"
+/* NxS[   2] */ new Table(0, 0, -1, null), // Shortest string "\t"
+/* NxS[   3] */ // Shortest string "#"
+      new Table(102, 15, -1, new sbyte[] {26, -1, -1, -1, -1, -1, 
+          -1, -1, -1, -1, -1, -1, -1, -1, 26}),
+/* NxS[   4] */ new Table(0, 0, -1, null), // Shortest string "("
+/* NxS[   5] */ new Table(0, 0, -1, null), // Shortest string ")"
+/* NxS[   6] */ new Table(0, 0, -1, null), // Shortest string "*"
+/* NxS[   7] */ new Table(0, 0, -1, null), // Shortest string "+"
+/* NxS[   8] */ // Shortest string "-"
+      new Table(49, 9, -1, new sbyte[] {11, 11, 11, 11, 11, 11, 
+          11, 11, 11}),
+/* NxS[   9] */ new Table(0, 0, -1, null), // Shortest string "/"
+/* NxS[  10] */ new Table(0, 0, -1, null), // Shortest string "0"
+/* NxS[  11] */ // Shortest string "1"
+      new Table(48, 10, -1, new sbyte[] {11, 11, 11, 11, 11, 11, 
+          11, 11, 11, 11}),
+/* NxS[  12] */ new Table(0, 0, -1, null), // Shortest string "<"
+/* NxS[  13] */ new Table(0, 0, -1, null), // Shortest string "="
+/* NxS[  14] */ new Table(0, 0, -1, null), // Shortest string ">"
+/* NxS[  15] */ // Shortest string "a"
+      new Table(110, 1, -1, new sbyte[] {40}),
+/* NxS[  16] */ // Shortest string "m"
+      new Table(111, 1, -1, new sbyte[] {39}),
+/* NxS[  17] */ // Shortest string "n"
+      new Table(111, 1, -1, new sbyte[] {38}),
+/* NxS[  18] */ // Shortest string "o"
+      new Table(114, 1, -1, new sbyte[] {22}),
+/* NxS[  19] */ // Shortest string "p"
+      new Table(114, 1, -1, new sbyte[] {28}),
+/* NxS[  20] */ new Table(0, 0, -1, null), // Shortest string "print-num"
+/* NxS[  21] */ new Table(0, 0, -1, null), // Shortest string "print-bool"
+/* NxS[  22] */ new Table(0, 0, -1, null), // Shortest string "or"
+/* NxS[  23] */ new Table(0, 0, -1, null), // Shortest string "not"
+/* NxS[  24] */ new Table(0, 0, -1, null), // Shortest string "mod"
+/* NxS[  25] */ new Table(0, 0, -1, null), // Shortest string "and"
+/* NxS[  26] */ new Table(0, 0, -1, null), // Shortest string "#f"
+/* NxS[  27] */ // Shortest string ""
+      new Table(9, 104, 1, new sbyte[] {2, 2, 1, 1, 2, 1, 
+          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+          1, 2, 1, 1, 3, 1, 1, 1, 1, 4, 5, 6, 7, 1, 8, 1, 
+          9, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 1, 1, 12, 13, 14, 
+          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+          1, 1, 15, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 16, 17, 
+          18, 19}),
+/* NxS[  28] */ // Shortest string "pr"
+      new Table(105, 1, -1, new sbyte[] {29}),
+/* NxS[  29] */ // Shortest string "pri"
+      new Table(110, 1, -1, new sbyte[] {30}),
+/* NxS[  30] */ // Shortest string "prin"
+      new Table(116, 1, -1, new sbyte[] {31}),
+/* NxS[  31] */ // Shortest string "print"
+      new Table(45, 1, -1, new sbyte[] {32}),
+/* NxS[  32] */ // Shortest string "print-"
+      new Table(98, 13, -1, new sbyte[] {33, -1, -1, -1, -1, -1, 
+          -1, -1, -1, -1, -1, -1, 34}),
+/* NxS[  33] */ // Shortest string "print-b"
+      new Table(111, 1, -1, new sbyte[] {36}),
+/* NxS[  34] */ // Shortest string "print-n"
+      new Table(117, 1, -1, new sbyte[] {35}),
+/* NxS[  35] */ // Shortest string "print-nu"
+      new Table(109, 1, -1, new sbyte[] {20}),
+/* NxS[  36] */ // Shortest string "print-bo"
+      new Table(111, 1, -1, new sbyte[] {37}),
+/* NxS[  37] */ // Shortest string "print-boo"
+      new Table(108, 1, -1, new sbyte[] {21}),
+/* NxS[  38] */ // Shortest string "no"
+      new Table(116, 1, -1, new sbyte[] {23}),
+/* NxS[  39] */ // Shortest string "mo"
+      new Table(100, 1, -1, new sbyte[] {24}),
+/* NxS[  40] */ // Shortest string "an"
+      new Table(100, 1, -1, new sbyte[] {25}),
     };
 
 int NextState() {
@@ -604,9 +668,69 @@ int NextState() {
             if (yywrap())
                 return (int)Token.EOF;
             break;
-        case 1: // Recognized '{Number}',	Shortest string "0"
-        case 2: // Recognized '{Number}',	Shortest string "1"
+        case 1: // Recognized '.',	Shortest string "\x01"
+        case 3: // Recognized '.',	Shortest string "#"
+        case 15: // Recognized '.',	Shortest string "a"
+        case 16: // Recognized '.',	Shortest string "m"
+        case 17: // Recognized '.',	Shortest string "n"
+        case 18: // Recognized '.',	Shortest string "o"
+        case 19: // Recognized '.',	Shortest string "p"
 {	}
+            break;
+        case 2: // Recognized '{Seperator}',	Shortest string "\t"
+{	}
+            break;
+        case 4: // Recognized '{Lp}',	Shortest string "("
+return (int)Token.Lp;
+            break;
+        case 5: // Recognized '{Rp}',	Shortest string ")"
+return (int)Token.Rp;
+            break;
+        case 6: // Recognized '{Mutiply}',	Shortest string "*"
+PrintCacheToken(yytext);	return (int)Token.Multiply;
+            break;
+        case 7: // Recognized '{Plus}',	Shortest string "+"
+PrintCacheToken(yytext);	return (int)Token.Plus;
+            break;
+        case 8: // Recognized '{Minus}',	Shortest string "-"
+PrintCacheToken(yytext);	return (int)Token.Minus;
+            break;
+        case 9: // Recognized '{Divide}',	Shortest string "/"
+PrintCacheToken(yytext);	return (int)Token.Divide;
+            break;
+        case 10: // Recognized '{Number}',	Shortest string "0"
+        case 11: // Recognized '{Number}',	Shortest string "1"
+PrintCacheToken(yytext);	GetNumber();	return (int)Token.Number;
+            break;
+        case 12: // Recognized '{Smaller}',	Shortest string "<"
+PrintCacheToken(yytext);	return (int)Token.Smaller;
+            break;
+        case 13: // Recognized '{Equal}',	Shortest string "="
+PrintCacheToken(yytext);	return (int)Token.Equal;
+            break;
+        case 14: // Recognized '{Greater}',	Shortest string ">"
+PrintCacheToken(yytext);	return (int)Token.Greater;
+            break;
+        case 20: // Recognized '{PrintNum}',	Shortest string "print-num"
+PrintCacheToken(yytext);	return (int)Token.PrintNum;
+            break;
+        case 21: // Recognized '{PrintBool}',	Shortest string "print-bool"
+PrintCacheToken(yytext);	return (int)Token.PrintBool;
+            break;
+        case 22: // Recognized '{Or}',	Shortest string "or"
+PrintCacheToken(yytext);	return (int)Token.Or;
+            break;
+        case 23: // Recognized '{Not}',	Shortest string "not"
+PrintCacheToken(yytext);	return (int)Token.Not;
+            break;
+        case 24: // Recognized '{Modulus}',	Shortest string "mod"
+PrintCacheToken(yytext);	return (int)Token.Modulus;
+            break;
+        case 25: // Recognized '{And}',	Shortest string "and"
+PrintCacheToken(yytext);	return (int)Token.And;
+            break;
+        case 26: // Recognized '{Bool}',	Shortest string "#f"
+PrintCacheToken(yytext);	GetBoolean();	return (int)Token.Bool;
             break;
         default:
             break;

@@ -15,6 +15,6 @@ namespace MiniLisp
             MemoryStream stream = new MemoryStream(inputBuffer);
             this.Scanner = new MiniLispScanner(stream);
             this.Parse();
-        }
+        }        
     }
 }

@@ -15,7 +15,7 @@ namespace MiniLisp
         internal static void InitializeEnvironment()
         {
             _envrionments = new List<Environment>();
-            AddEnvironment(new Environment()); 
+            PushEnvironment(new Environment()); 
         }
 
         internal static Environment GetCurrentEnvironment()
@@ -23,7 +23,7 @@ namespace MiniLisp
             return _envrionments[_top - 1];
         }
 
-        internal static void AddEnvironment(Environment env)
+        internal static void PushEnvironment(Environment env)
         {
             _envrionments.Add(env);
             _top++;
@@ -32,6 +32,33 @@ namespace MiniLisp
         internal static void PopEnvironment()
         {
             _envrionments.RemoveAt(--_top);
+        }
+
+        internal static IAST LookUp(string key)
+        {
+            IAST item = null;
+            for (int i = _envrionments.Count - 1; i >= 0 && item == null; i--)
+            {
+                try
+                {
+                    item = _envrionments[i].LookUp(key);
+                }
+                catch(Exception ex)
+                {
+                      
+                }
+            }
+
+            if (item == null)
+                throw new KeyNotFoundException();
+
+            return item;
+        }
+
+        internal static void Add(string key, IAST value)
+        {
+            var env = GetCurrentEnvironment();
+            env.Add(key, value);
         }
 
         internal class Environment

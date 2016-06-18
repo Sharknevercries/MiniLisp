@@ -1,10 +1,10 @@
 
 // ==========================================================================
-//  GPPG error listing for yacc source file <MiniLisp.Language.grammar.y - 6/18/2016 PM 04:15:36>
+//  GPPG error listing for yacc source file <MiniLisp.Language.grammar.y - 6/18/2016 PM 10:47:41>
 // ==========================================================================
 //  Version:  1.5.2
 //  Machine:  SHARK
-//  DateTime: 6/18/2016 PM 04:15:37
+//  DateTime: 6/18/2016 PM 10:47:57
 //  UserName: Zheng-Yuan
 // ==========================================================================
 
@@ -18,7 +18,8 @@
 %union { 
 			public int Value; 
 			public bool BoolValue;
-			public string Str; 
+			public string Str;
+			public List<string> StrList;
 			public MiniLispParser.IAST Node;
 			public List<MiniLispParser.IAST> NodeList;
 	   }
@@ -32,34 +33,35 @@
 %token Fun, Define, If
 
 %type <NodeList> exps
+%type <StrList> strs
 %type <Node> stmt, exp, print_stmt, def_stmt, number_op, logic_op, if_exp, fun_exp, fun_call
 
 %token <Value> Number
 %token <BoolValue> Bool
 %token <Str> Str
 
-
 %%
-// Error: NonTerminal symbol "s" has no productions
-// Error: NonTerminal symbol "sd" has no productions
-// Warning: Terminating sd fixes the following size-2 NonTerminal set
-   // {fun_call, sd}
-// Error: There are 4 non-terminating NonTerminal Symbols
-   //  {fun_exp, fun_call, s, sd}
-// Warning: Terminating s fixes the following size-2 NonTerminal set
-   // {fun_exp, s}
-// ------------------------------------------------------------------
+// Error: NonTerminal symbol "fun_ids" has no productions
+// Warning: Terminating fun_ids fixes the following size-1 NonTerminal set
+   // {fun_ids}
+// Error: There are 1 non-terminating NonTerminal Symbols
+   //  {fun_ids}
+// -----------------------------------------------------------------------
 
 program		:	stmts
 			;
 stmts		:	stmts stmt
-			|	stmt	{
+			|	stmt
+			;
+stmt		:	exp {
 				$1.Evaluate();
 			}
-			;
-stmt		:	exp
-			|	print_stmt
-			|	def_stmt
+			|	print_stmt {
+				$1.Evaluate();
+			}
+			|	def_stmt {
+				$1.Evaluate();
+			}
 			;
 print_stmt	:	Lp PrintNum exp Rp {
 				$$ = new PrintNum(Scanner, $3);
@@ -68,13 +70,12 @@ print_stmt	:	Lp PrintNum exp Rp {
 				$$ = new PrintBool(Scanner, $3);
 			}
 			;
-exps		:	exps exp {
+exps		:	{
+				$$ = new List<IAST>();
+			}
+			|	exps exp {
 				$$ = $1;
 				$$.Add($2);
-			}
-			|	exp {
-				$$ = new List<IAST>();
-				$$.Add($1);
 			}
 			;
 exp			:	Number {
@@ -91,6 +92,14 @@ exp			:	Number {
 			|	if_exp
 			|	fun_exp
 			|	fun_call
+			;
+strs		:	{
+				$$ = new List<string>();
+			}
+			|	fun_ids Str {
+				$$ = $1;
+				$$.Add($2);
+			}
 			;
 def_stmt	:	Lp Define Str exps Rp {
 				$$ = new Define(Scanner, $3, $4);
@@ -135,9 +144,10 @@ if_exp		:	Lp If exps Rp {
 				$$ = new If(Scanner, $3);
 			}
 			;
-fun_exp		:	s
+fun_exp		:	Lp Fun Lp strs Rp exps Rp {
+			}
 			;
-fun_call	:  sd
+fun_call	:   Lp Rp
 			;
 %%// ==========================================================================
 

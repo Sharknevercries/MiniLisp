@@ -7,7 +7,8 @@
 %union { 
 			public int Value; 
 			public bool BoolValue;
-			public string Str; 
+			public string Str;
+			public List<string> StrList;
 			public MiniLispParser.IAST Node;
 			public List<MiniLispParser.IAST> NodeList;
 	   }
@@ -21,12 +22,12 @@
 %token Fun, Define, If
 
 %type <NodeList> exps
+%type <StrList> strs
 %type <Node> stmt, exp, print_stmt, def_stmt, number_op, logic_op, if_exp, fun_exp, fun_call
 
 %token <Value> Number
 %token <BoolValue> Bool
 %token <Str> Str
-
 
 %%
 
@@ -52,13 +53,12 @@ print_stmt	:	Lp PrintNum exp Rp {
 				$$ = new PrintBool(Scanner, $3);
 			}
 			;
-exps		:	exps exp {
+exps		:	{
+				$$ = new List<IAST>();
+			}
+			|	exps exp {
 				$$ = $1;
 				$$.Add($2);
-			}
-			|	exp {
-				$$ = new List<IAST>();
-				$$.Add($1);
 			}
 			;
 exp			:	Number {
@@ -75,6 +75,14 @@ exp			:	Number {
 			|	if_exp
 			|	fun_exp
 			|	fun_call
+			;
+strs		:	{
+				$$ = new List<string>();
+			}
+			|	strs Str {
+				$$ = $1;
+				$$.Add($2);
+			}
 			;
 def_stmt	:	Lp Define Str exps Rp {
 				$$ = new Define(Scanner, $3, $4);
@@ -119,8 +127,15 @@ if_exp		:	Lp If exps Rp {
 				$$ = new If(Scanner, $3);
 			}
 			;
-fun_exp		:	Lp Lp
+fun_exp		:	Lp Fun Lp strs Rp exps Rp {
+				$$ = new Function(Scanner, $4, $6);
+			}
 			;
-fun_call	:   Lp Lp
+fun_call	:   Lp fun_exp exps Rp {
+				$$ = new FunctionCall(Scanner, $2, $3);
+			}
+			|	Lp Str exps Rp {
+				$$ = new FunctionCall(Scanner, $2, $3);
+			}
 			;
 %%

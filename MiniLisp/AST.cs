@@ -71,9 +71,7 @@ namespace MiniLisp
             {
                 try
                 {
-                    var env = GetCurrentEnvironment();
-                    var ret = env.LookUp(Value);
-                    // TODO: Check whether is fun
+                    var ret = LookUp(Value);
                     return ret.Evaluate();
                 }
                 catch(Exception ex)
@@ -335,7 +333,7 @@ namespace MiniLisp
 
             public override object Evaluate()
             {
-                bool finalResult = false;
+                bool finalResult = true;
 
                 if (Values.Count != 2)
                 {
@@ -345,6 +343,7 @@ namespace MiniLisp
 
                 try
                 {
+                    // TODO: Support mutilple equal.
                     finalResult = (Values[0].Evaluate() as int?).Value == (Values[1].Evaluate() as int?).Value;
                 }
                 catch (Exception ex)
@@ -527,7 +526,77 @@ namespace MiniLisp
             }
         }
 
+        internal sealed class Function : AST
+        {
+            public Function(AbstractScanner<ValueType, LexLocation> scanner, List<string> param, List<IAST> body) : base(scanner)
+            {
+                Param = param;
+                Body = body;
+            }
 
+            public List<string> Param { get; set; }
+            public List<IAST> Body { get; set; }
+
+            public override object Evaluate()
+            {
+                try
+                {
+                    // TODO: Add inner defined helper function.
+                    return Body[0].Evaluate();
+                }
+                catch(Exception ex)
+                {
+                    Scanner.yyerror(TYPE_ERROR);
+                    YYAbort();
+                }
+
+                return null;
+            }
+        }
+
+        internal sealed class FunctionCall : AST
+        {
+            public FunctionCall(AbstractScanner<ValueType, LexLocation> scanner, IAST function, List<IAST> param) : base(scanner)
+            {
+                Function = function;
+                Param = param;
+            }
+
+            public FunctionCall(AbstractScanner<ValueType, LexLocation> scanner, string functionName, List<IAST> param) : base(scanner)
+            {
+                Function = LookUp(functionName);
+                Param = param;
+            }
+
+            public IAST Function { get; set; }
+            public List<IAST> Param { get; set; }
+
+            public override object Evaluate()
+            {
+                var func = Function as Function;
+
+                if (Param.Count != func.Param.Count)
+                {
+                    Scanner.yyerror(SYNTAX_ERROR);
+                    YYAbort();
+                }
+
+                PushEnvironment(new Environment());
+
+                for(int i = 0; i < Param.Count; i++)
+                {
+                    var key = func.Param[i];
+                    var value = Param[i];
+                    Add(key, value);
+                }
+
+                var ret = func.Evaluate();
+
+                PopEnvironment();
+
+                return ret;
+            }
+        }
 
         internal sealed class PrintNum : AST
         {

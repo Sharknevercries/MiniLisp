@@ -335,7 +335,7 @@ namespace MiniLisp
             {
                 bool finalResult = true;
 
-                if (Values.Count != 2)
+                if (Values.Count < 2)
                 {
                     Scanner.yyerror(SYNTAX_ERROR);
                     YYAbort();
@@ -343,8 +343,10 @@ namespace MiniLisp
 
                 try
                 {
-                    // TODO: Support mutilple equal.
-                    finalResult = (Values[0].Evaluate() as int?).Value == (Values[1].Evaluate() as int?).Value;
+                    for(int i = 0; i < Values.Count - 1; i++)
+                    {
+                        finalResult &= (Values[i].Evaluate() as int?).Value == (Values[i + 1].Evaluate() as int?).Value;
+                    }
                 }
                 catch (Exception ex)
                 {

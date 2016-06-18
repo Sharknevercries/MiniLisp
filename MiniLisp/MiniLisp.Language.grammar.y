@@ -18,9 +18,10 @@
 %token Lp, Rp
 %token Plus, Minus, Multiply, Divide, Modulus
 %token Smaller, Greater, Equal, And, Or, Not
+%token Fun, Define, If
 
 %type <NodeList> exps
-%type <Node> exp, print_stmt, def_stmt, number_op, logic_op
+%type <Node> stmt, exp, print_stmt, def_stmt, number_op, logic_op, if_exp, fun_exp, fun_call
 
 %token <Value> Number
 %token <BoolValue> Bool
@@ -34,12 +35,14 @@ program		:	stmts
 stmts		:	stmts stmt
 			|	stmt
 			;
-stmt		:	exp	{
+stmt		:	exp {
+				$1.Evaluate();
 			}
 			|	print_stmt {
 				$1.Evaluate();
 			}
 			|	def_stmt {
+				$1.Evaluate();
 			}
 			;
 print_stmt	:	Lp PrintNum exp Rp {
@@ -48,8 +51,6 @@ print_stmt	:	Lp PrintNum exp Rp {
 			|	Lp PrintBool exp Rp {
 				$$ = new PrintBool(Scanner, $3);
 			}
-			;
-def_stmt	:	
 			;
 exps		:	exps exp {
 				$$ = $1;
@@ -61,13 +62,23 @@ exps		:	exps exp {
 			}
 			;
 exp			:	Number {
-				$$ = new Number($1);
+				$$ = new Number(Scanner, $1);
 			}
 			|	Bool {
-				$$ = new Bool($1);
+				$$ = new Bool(Scanner, $1);
+			}
+			|	Str {
+				$$ = new Id(Scanner, $1);
 			}
 			|	number_op
 			|	logic_op
+			|	if_exp
+			|	fun_exp
+			|	fun_call
+			;
+def_stmt	:	Lp Define Str exps Rp {
+				$$ = new Define(Scanner, $3, $4);
+			}
 			;
 number_op	:	Lp Plus exps Rp {
 				$$ = new Plus(Scanner, $3);
@@ -103,5 +114,13 @@ logic_op	:	Lp And exps Rp {
 			|	Lp Not exps Rp {
 				$$ = new Not(Scanner, $3);
 			}
+			;
+if_exp		:	Lp If exps Rp {
+				$$ = new If(Scanner, $3);
+			}
+			;
+fun_exp		:	Lp Lp
+			;
+fun_call	:   Lp Lp
 			;
 %%

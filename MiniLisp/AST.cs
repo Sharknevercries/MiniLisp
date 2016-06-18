@@ -11,6 +11,8 @@ namespace MiniLisp
     {
         private readonly static string TYPE_ERROR = "Type Error";
         private readonly static string SYNTAX_ERROR = "Syntax Error";
+        private readonly static string UNDEFINED_ERROR = "Undefined Error";
+        private readonly static string REDEFINE_ERROR = "Redefined Error";
 
         internal interface IAST
         {
@@ -26,36 +28,64 @@ namespace MiniLisp
             public abstract object Evaluate();
         }
 
-        internal sealed class Number : IAST
+        internal sealed class Number : AST
         {
             public int Value { get; set; }
 
-            public Number(int value)
+            public Number(AbstractScanner<ValueType, LexLocation> scanner, int value) : base(scanner)
             {
                 Value = value;
             }
 
-            public object Evaluate()
+            public override object Evaluate()
             {
                 return Value;
             }
         }
 
-        internal sealed class Bool : IAST
+        internal sealed class Bool : AST
         {
-            public Bool(bool value)
+            public Bool(AbstractScanner<ValueType, LexLocation> scanner, bool value) : base(scanner)
             {
                 Value = value;
             }
 
             public bool Value { get; set; }
 
-            public object Evaluate()
+            public override object Evaluate()
             {
                 return Value;
             }
         }
-        
+
+        internal sealed class Id : AST
+        {
+            public Id(AbstractScanner<ValueType, LexLocation> scanner, string value) : base(scanner)
+            {
+                Value = value;
+            }
+
+            public string Value { get; set; }
+
+            public override object Evaluate()
+            {
+                try
+                {
+                    var env = GetCurrentEnvironment();
+                    var ret = env.LookUp(Value);
+                    // TODO: Check whether is fun
+                    return ret.Evaluate();
+                }
+                catch(Exception ex)
+                {
+                    Scanner.yyerror(UNDEFINED_ERROR);
+                    YYAbort();
+                }
+
+                return null;
+            }
+        }
+
         internal sealed class Plus : AST
         {
             public Plus(AbstractScanner<ValueType, LexLocation> scanner, List<IAST> values) : base(scanner)
@@ -432,6 +462,73 @@ namespace MiniLisp
             }
         }
 
+        internal sealed class If : AST
+        {
+            public If(AbstractScanner<ValueType, LexLocation> scanner, List<IAST> values) : base(scanner)
+            {
+                Values = values;
+            }
+
+            public List<IAST> Values { get; set; }
+
+            public override object Evaluate()
+            {
+                if (Values.Count != 3)
+                {
+                    Scanner.yyerror(SYNTAX_ERROR);
+                    YYAbort();
+                }
+
+                try
+                {
+                    return (Values[0].Evaluate() as bool?).Value ? Values[1].Evaluate() : Values[2].Evaluate();
+                }
+                catch(Exception ex)
+                {
+                    Scanner.yyerror(TYPE_ERROR);
+                    YYAbort();
+                }
+
+                return null;
+            }
+        }
+
+        internal sealed class Define : AST
+        {
+            public Define(AbstractScanner<ValueType, LexLocation> scanner, string name, List<IAST> values) : base(scanner)
+            {
+                Name = name;
+                Values = values;
+            }
+
+            public string Name { get; set; }
+            public List<IAST> Values { get; set; }
+
+            public override object Evaluate()
+            {
+                if (Values.Count != 1)
+                {
+                    Scanner.yyerror(SYNTAX_ERROR);
+                    YYAbort();
+                }
+
+                try
+                {
+                    var env = GetCurrentEnvironment();
+                    env.Add(Name, Values[0]);
+                }
+                catch(Exception ex)
+                {
+                    Scanner.yyerror(REDEFINE_ERROR);
+                    YYAbort();
+                }
+
+                return null;
+            }
+        }
+
+
+
         internal sealed class PrintNum : AST
         {
             public PrintNum(AbstractScanner<ValueType, LexLocation> scanner, IAST value) : base(scanner)
@@ -471,7 +568,7 @@ namespace MiniLisp
                 var ret = Value.Evaluate();
                 try
                 {
-                    Console.WriteLine((bool)ret == true ? "#t" : "#f");
+                    Console.WriteLine((bool)ret ? "#t" : "#f");
                 }
                 catch (Exception ex)
                 {

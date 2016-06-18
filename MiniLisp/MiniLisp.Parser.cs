@@ -11,6 +11,7 @@ namespace MiniLisp
 
         public void Parse(string s)
         {
+            InitializeEnvironment();
             byte[] inputBuffer = System.Text.Encoding.Default.GetBytes(s);
             MemoryStream stream = new MemoryStream(inputBuffer);
             this.Scanner = new MiniLispScanner(stream);

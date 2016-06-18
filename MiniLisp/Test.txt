@@ -1,5 +1,5 @@
-﻿(print-bool (or #t #t #f))
-(print-bool (or #f (and #f #t) (not #f)))
-(print-bool (and #t (not #f) (or #f #t) (and #t (not #t))))
+﻿(define a (* 1 2 3 4))
 
+(define b (+ 10 -5 -2 -1))
 
+(print-num (+ a b))

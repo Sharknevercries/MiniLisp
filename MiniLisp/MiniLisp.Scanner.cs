@@ -16,7 +16,7 @@ namespace MiniLisp
             yylval.Str = yytext;
         }
 
-        public void GetBoolean()
+        public void GetBool()
         {
             yylval.BoolValue = yytext[1] == 't';
         }

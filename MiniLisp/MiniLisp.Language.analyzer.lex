@@ -44,16 +44,19 @@ PrintBool		"print-bool"
 {Mutiply}		{	PrintCacheToken(yytext);	return (int)Token.Multiply;	}
 {Divide}		{	PrintCacheToken(yytext);	return (int)Token.Divide;	}
 {Modulus}		{	PrintCacheToken(yytext);	return (int)Token.Modulus;	}
-{Bool}			{	PrintCacheToken(yytext);	GetBoolean();	return (int)Token.Bool;	}
+{Bool}			{	PrintCacheToken(yytext);	GetBool();	return (int)Token.Bool;	}
 {Smaller}		{	PrintCacheToken(yytext);	return (int)Token.Smaller;	}
 {Greater}		{	PrintCacheToken(yytext);	return (int)Token.Greater;	}
 {Equal}			{	PrintCacheToken(yytext);	return (int)Token.Equal;	}
 {And}			{	PrintCacheToken(yytext);	return (int)Token.And;	}
 {Or}			{	PrintCacheToken(yytext);	return (int)Token.Or;	}
 {Not}			{	PrintCacheToken(yytext);	return (int)Token.Not;	}
-
+{If}			{	PrintCacheToken(yytext);	return (int)Token.If;	}
+{Define}		{	PrintCacheToken(yytext);	return (int)Token.Define;	}
+{Fun}			{	PrintCacheToken(yytext);	return (int)Token.Fun;	}
 {PrintNum}		{	PrintCacheToken(yytext);	return (int)Token.PrintNum;	}
 {PrintBool}		{	PrintCacheToken(yytext);	return (int)Token.PrintBool;	}
+{Id}			{	PrintCacheToken(yytext);	GetId();	return (int)Token.Str;	}
 {Lp}			{	return (int)Token.Lp;	}
 {Rp}			{	return (int)Token.Rp;	}
 

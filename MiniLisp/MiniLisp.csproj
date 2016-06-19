@@ -68,30 +68,78 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="testcase\01_1.lsp" />
-    <None Include="testcase\01_2.lsp" />
-    <None Include="testcase\02_1.lsp" />
-    <None Include="testcase\02_2.lsp" />
-    <None Include="testcase\03_1.lsp" />
-    <None Include="testcase\03_2.lsp" />
-    <None Include="testcase\04_1.lsp" />
-    <None Include="testcase\04_2.lsp" />
-    <None Include="testcase\05_1.lsp" />
-    <None Include="testcase\05_2.lsp" />
-    <None Include="testcase\06_1.lsp" />
-    <None Include="testcase\06_2.lsp" />
-    <None Include="testcase\07_1.lsp" />
-    <None Include="testcase\07_2.lsp" />
-    <None Include="testcase\08_1.lsp" />
-    <None Include="testcase\08_2.lsp" />
-    <None Include="testcase\b1_1.lsp" />
-    <None Include="testcase\b1_2.lsp" />
-    <None Include="testcase\b2_1.lsp" />
-    <None Include="testcase\b2_2.lsp" />
-    <None Include="testcase\b3_1.lsp" />
-    <None Include="testcase\b3_2.lsp" />
-    <None Include="testcase\b4_1.lsp" />
-    <None Include="testcase\b4_2.lsp" />
+    <None Include="testcase\01_1.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testcase\01_2.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testcase\02_1.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testcase\02_2.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testcase\03_1.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testcase\03_2.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testcase\04_1.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testcase\04_2.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testcase\05_1.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testcase\05_2.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testcase\06_1.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testcase\06_2.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testcase\07_1.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testcase\07_2.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testcase\08_1.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testcase\08_2.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testcase\b1_1.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testcase\b1_2.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testcase\b2_1.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testcase\b2_2.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testcase\b3_1.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testcase\b3_2.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testcase\b4_1.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="testcase\b4_2.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup Label="CalculatorFiles">
     <Compile Include="Calculator.Parser.cs">

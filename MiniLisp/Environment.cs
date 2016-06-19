@@ -15,7 +15,8 @@ namespace MiniLisp
         internal static void InitializeEnvironment()
         {
             _envrionments = new List<Environment>();
-            PushEnvironment(new Environment()); 
+            _top = 0;
+            PushEnvironment(new Environment());
         }
 
         internal static Environment GetCurrentEnvironment()

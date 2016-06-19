@@ -23,14 +23,13 @@ namespace MiniLisp
 
         public void PrintCacheToken(string message)
         {
-            Console.WriteLine("Catch {0}", message);
+            //Console.WriteLine("Catch {0}", message);
         }
 
         public override void yyerror(string format, params object[] args)
         {
             base.yyerror(format, args);
             Console.WriteLine(format, args);
-            Console.WriteLine();
         }        
     }    
 }

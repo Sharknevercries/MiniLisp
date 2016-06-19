@@ -368,6 +368,8 @@ namespace QUT.Gppg {
 
         private void ReportError() {
             StringBuilder errorMsg = new StringBuilder();
+            errorMsg.AppendFormat("Syntax Error", Environment.NewLine);
+            /*
             errorMsg.AppendFormat( "Syntax error, unexpected {0}", TerminalToString( NextToken ) );
 
             if (FsaState.ParserTable.Count < 7) {
@@ -382,6 +384,7 @@ namespace QUT.Gppg {
                     first = false;
                 }
             }
+            */
             scanner.yyerror( errorMsg.ToString() );
         }
 

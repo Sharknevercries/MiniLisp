@@ -142,31 +142,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup Label="CalculatorFiles">
-    <Compile Include="Calculator.Parser.cs">
-      <DependentUpon>Calculator.parser</DependentUpon>
-    </Compile>
-    <Compile Include="Calculator.Parser.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Calculator.Language.grammar.y</DependentUpon>
-    </Compile>
-    <Compile Include="Calculator.Scanner.cs">
-      <DependentUpon>Calculator.parser</DependentUpon>
-    </Compile>
-    <Compile Include="Calculator.Scanner.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Calculator.Language.analyzer.lex</DependentUpon>
-    </Compile>
-    <None Include="Calculator.Language.analyzer.lex">
-      <DependentUpon>Calculator.parser</DependentUpon>
-    </None>
-    <None Include="Calculator.Language.grammar.y">
-      <DependentUpon>Calculator.parser</DependentUpon>
-    </None>
-    <None Include="Calculator.parser" />
-  </ItemGroup>
   <ItemGroup Label="MiniLispFiles">
     <Compile Include="MiniLisp.Parser.cs">
       <DependentUpon>MiniLisp.parser</DependentUpon>

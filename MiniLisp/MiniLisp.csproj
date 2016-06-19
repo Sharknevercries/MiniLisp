@@ -61,6 +61,7 @@
     <Compile Include="AST.cs" />
     <Compile Include="Environment.cs" />
     <Compile Include="GplexBuffers.cs" />
+    <Compile Include="MiniLispTest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShiftReduceParserCode.cs" />

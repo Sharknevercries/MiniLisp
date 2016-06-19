@@ -69,7 +69,7 @@ namespace MiniLisp
                 DefineTable = new Dictionary<string, object>();
             }
 
-            private Dictionary<string, object> DefineTable;
+            public Dictionary<string, object> DefineTable;
 
             public object LookUp(string key)
             {

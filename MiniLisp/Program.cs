@@ -320,7 +320,7 @@ namespace MiniLisp
 
             try
             {
-                using(StreamReader sr = new StreamReader("./testcase/b4_1.lsp"))
+                using(StreamReader sr = new StreamReader("./testcase/b4_2.lsp"))
                 {
                     parser.Parse(sr.ReadToEnd());
                 }

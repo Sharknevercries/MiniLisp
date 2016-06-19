@@ -547,8 +547,10 @@ namespace MiniLisp
             {
                 Param = param;
                 Body = body;
+                LocalEnvironment = new Dictionary<string, IAST>();
             }
 
+            public Dictionary<string, IAST> LocalEnvironment;
             public List<string> Param { get; set; }
             public List<IAST> Body { get; set; }
 
@@ -556,6 +558,11 @@ namespace MiniLisp
             {
                 try
                 {
+                    foreach(var item in LocalEnvironment.Keys)
+                    {
+                        Add(item, LocalEnvironment[item] as IAST);
+                    }                    
+
                     for (int i = 0; i < Body.Count - 1; i++)
                     {
                         Body[i].Evaluate();
@@ -567,7 +574,18 @@ namespace MiniLisp
                     YYAbort();
                 }
 
-                return Body[Body.Count - 1].Evaluate();
+                if (Body[Body.Count - 1] is Function)
+                {
+                    var currentEnvironment = GetCurrentEnvironment();
+                    var innerFunction = Body[Body.Count - 1] as Function;
+                    foreach (var item in Param)
+                    {
+                        innerFunction.LocalEnvironment.Add(item, currentEnvironment.LookUp(item) as IAST);
+                    }
+                    return Body[Body.Count - 1];
+                }
+                else
+                    return Body[Body.Count - 1].Evaluate();
             }
         }
 
@@ -594,21 +612,36 @@ namespace MiniLisp
             {
                 if (FunctionName != null)
                     Function = LookUp(FunctionName) as IAST;
-
-                var func = Function as Function;
-
+                
+                /*
                 if (Param.Count != func.Param.Count)
                 {
                     Scanner.yyerror(SYNTAX_ERROR);
                     YYAbort();
                 }
+                */
 
                 var env = new Environment();
+
+                if(Function is FunctionCall)
+                {
+                    Function = Function.Evaluate() as IAST;
+                }
+
+                var func = Function as Function;
 
                 for (int i = 0; i < Param.Count; i++)
                 {
                     var key = func.Param[i];
-                    var value = Param[i].Evaluate() as IAST;
+                    IAST value = null;
+                    if (Param[i] is Function)
+                    {
+                        value = Param[i];
+                    }
+                    else
+                    {
+                        value = Param[i].Evaluate() as IAST;
+                    }                    
                     env.Add(key, value);
                 }
 

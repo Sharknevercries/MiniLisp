@@ -612,14 +612,6 @@ namespace MiniLisp
             {
                 if (FunctionName != null)
                     Function = LookUp(FunctionName) as IAST;
-                
-                /*
-                if (Param.Count != func.Param.Count)
-                {
-                    Scanner.yyerror(SYNTAX_ERROR);
-                    YYAbort();
-                }
-                */
 
                 var env = new Environment();
 
@@ -629,6 +621,12 @@ namespace MiniLisp
                 }
 
                 var func = Function as Function;
+
+                if (Param.Count != func.Param.Count)
+                {
+                    Scanner.yyerror(SYNTAX_ERROR);
+                    YYAbort();
+                }
 
                 for (int i = 0; i < Param.Count; i++)
                 {

@@ -1,4 +1,4 @@
-﻿(define bar (fun (x) (+ x 1)))
+(define bar (fun (x) (+ x 1)))
 
 (define bar-z (fun () 2))
 

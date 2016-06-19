@@ -554,8 +554,20 @@ namespace MiniLisp
 
             public override object Evaluate()
             {
-                // TODO: Add inner defined helper function.
-                return Body[0].Evaluate();
+                try
+                {
+                    for (int i = 0; i < Body.Count - 1; i++)
+                    {
+                        Body[i].Evaluate();
+                    }
+                }
+                catch(NullReferenceException ex)
+                {
+                    Scanner.yyerror(SYNTAX_ERROR);
+                    YYAbort();
+                }
+
+                return Body[Body.Count - 1].Evaluate();
             }
         }
 

@@ -21,7 +21,7 @@
 %token Smaller, Greater, Equal, And, Or, Not
 %token Fun, Define, If
 
-%type <NodeList> exps
+%type <NodeList> exps, def_stmts, fun_body
 %type <StrList> strs
 %type <Node> stmt, exp, print_stmt, def_stmt, number_op, logic_op, if_exp, fun_exp, fun_call
 
@@ -44,6 +44,14 @@ stmt		:	exp {
 			}
 			|	def_stmt {
 				$1.Evaluate();
+			}
+			;
+def_stmts	:	{
+				$$ = new List<IAST>();
+			}
+			|	def_stmts def_stmt {
+				$$ = $1;
+				$$.Add($2);
 			}
 			;
 print_stmt	:	Lp PrintNum exp Rp {
@@ -127,8 +135,13 @@ if_exp		:	Lp If exps Rp {
 				$$ = new If(Scanner, $3);
 			}
 			;
-fun_exp		:	Lp Fun Lp strs Rp exps Rp {
+fun_exp		:	Lp Fun Lp strs Rp fun_body Rp {
 				$$ = new Function(Scanner, $4, $6);
+			}
+			;
+fun_body	:	def_stmts exp {
+				$$ = $1;
+				$$.Add($2);
 			}
 			;
 fun_call	:   Lp fun_exp exps Rp {

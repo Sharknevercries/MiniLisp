@@ -35,9 +35,9 @@ namespace MiniLisp
             _envrionments.RemoveAt(--_top);
         }
 
-        internal static IAST LookUp(string key)
+        internal static object LookUp(string key)
         {
-            IAST item = null;
+            object item = null;
             for (int i = _envrionments.Count - 1; i >= 0 && item == null; i--)
             {
                 try
@@ -66,12 +66,12 @@ namespace MiniLisp
         {
             public Environment()
             {
-                DefineTable = new Dictionary<string, IAST>();
+                DefineTable = new Dictionary<string, object>();
             }
 
-            private Dictionary<string, IAST> DefineTable;
+            private Dictionary<string, object> DefineTable;
 
-            public IAST LookUp(string key)
+            public object LookUp(string key)
             {
                 return DefineTable[key];                
             }

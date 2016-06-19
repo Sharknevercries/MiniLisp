@@ -14,6 +14,16 @@ namespace MiniLisp
         private readonly static string UNDEFINED_ERROR = "Undefined Error";
         private readonly static string REDEFINE_ERROR = "Redefined Error";
 
+        private static int ConvertToInt(object value)
+        {
+            return (int)((value is Number) ? (value as Number).Value : value);
+        }
+
+        private static bool ConvertToBool(object value)
+        {
+            return (bool)((value is Bool) ? (value as Bool).Value : value);
+        }
+
         internal interface IAST
         {
             object Evaluate();
@@ -39,7 +49,7 @@ namespace MiniLisp
 
             public override object Evaluate()
             {
-                return Value;
+                return this;
             }
         }
 
@@ -54,7 +64,7 @@ namespace MiniLisp
 
             public override object Evaluate()
             {
-                return Value;
+                return this;
             }
         }
 
@@ -71,12 +81,16 @@ namespace MiniLisp
             {
                 try
                 {
-                    var ret = LookUp(Value);
-                    return ret.Evaluate();
+                    return (LookUp(Value) as IAST).Evaluate();
                 }
-                catch(Exception ex)
+                catch (KeyNotFoundException ex)
                 {
                     Scanner.yyerror(UNDEFINED_ERROR);
+                    YYAbort();
+                }
+                catch (NullReferenceException ex)
+                {
+                    Scanner.yyerror(TYPE_ERROR);
                     YYAbort();
                 }
 
@@ -96,10 +110,10 @@ namespace MiniLisp
             public override object Evaluate()
             {
                 int finalResult = 0;
-              
+
                 if (Values.Count < 2)
                 {
-                    
+
                     Scanner.yyerror(SYNTAX_ERROR);
                     YYAbort();
                 }
@@ -108,16 +122,16 @@ namespace MiniLisp
                 {
                     try
                     {
-                        finalResult += (item.Evaluate() as int?).Value;
+                        finalResult += ConvertToInt(item.Evaluate());
                     }
-                    catch(Exception ex)
+                    catch (InvalidCastException ex)
                     {
                         Scanner.yyerror(TYPE_ERROR);
                         YYAbort();
                     }
                 }
 
-                return finalResult;
+                return new Number(Scanner, finalResult);
             }
         }
 
@@ -134,7 +148,7 @@ namespace MiniLisp
             {
                 int finalResult = 0;
 
-                if(Values.Count != 2)
+                if (Values.Count != 2)
                 {
                     Scanner.yyerror("Syntax error");
                     YYAbort();
@@ -142,15 +156,15 @@ namespace MiniLisp
 
                 try
                 {
-                    finalResult = (Values[0].Evaluate() as int?).Value - (Values[1].Evaluate() as int?).Value;
+                    finalResult = ConvertToInt(Values[0].Evaluate()) - ConvertToInt(Values[1].Evaluate());
                 }
-                catch(Exception ex)
+                catch (InvalidCastException ex)
                 {
                     Scanner.yyerror(TYPE_ERROR);
                     YYAbort();
                 }
 
-                return finalResult;
+                return new Number(Scanner, finalResult);
             }
         }
 
@@ -177,16 +191,16 @@ namespace MiniLisp
                 {
                     try
                     {
-                        finalResult *= (item.Evaluate() as int?).Value;
+                        finalResult *= ConvertToInt(item.Evaluate());
                     }
-                    catch (Exception ex)
+                    catch (InvalidCastException ex)
                     {
                         Scanner.yyerror(TYPE_ERROR);
                         YYAbort();
                     }
                 }
 
-                return finalResult;
+                return new Number(Scanner, finalResult);
             }
         }
 
@@ -211,15 +225,15 @@ namespace MiniLisp
 
                 try
                 {
-                    finalResult = (Values[0].Evaluate() as int?).Value / (Values[1].Evaluate() as int?).Value;
+                    finalResult = ConvertToInt(Values[0].Evaluate()) / ConvertToInt(Values[1].Evaluate());
                 }
-                catch (Exception ex)
+                catch (InvalidCastException ex)
                 {
                     Scanner.yyerror(TYPE_ERROR);
                     YYAbort();
                 }
 
-                return finalResult;
+                return new Number(Scanner, finalResult);
             }
         }
 
@@ -244,15 +258,15 @@ namespace MiniLisp
 
                 try
                 {
-                    finalResult = (Values[0].Evaluate() as int?).Value % (Values[1].Evaluate() as int?).Value;
+                    finalResult = ConvertToInt(Values[0].Evaluate()) % ConvertToInt(Values[1].Evaluate());
                 }
-                catch (Exception ex)
+                catch (InvalidCastException ex)
                 {
                     Scanner.yyerror(TYPE_ERROR);
                     YYAbort();
                 }
 
-                return finalResult;
+                return new Number(Scanner, finalResult);
             }
         }
 
@@ -269,7 +283,7 @@ namespace MiniLisp
             {
                 bool finalResult = false;
 
-                if(Values.Count != 2)
+                if (Values.Count != 2)
                 {
                     Scanner.yyerror(SYNTAX_ERROR);
                     YYAbort();
@@ -277,15 +291,15 @@ namespace MiniLisp
 
                 try
                 {
-                    finalResult = (Values[0].Evaluate() as int?).Value > (Values[1].Evaluate() as int?).Value;
+                    finalResult = ConvertToInt(Values[0].Evaluate()) > ConvertToInt(Values[1].Evaluate());
                 }
-                catch(Exception ex)
+                catch (InvalidCastException ex)
                 {
                     Scanner.yyerror(TYPE_ERROR);
                     YYAbort();
                 }
 
-                return finalResult;
+                return new Bool(Scanner, finalResult);
             }
         }
 
@@ -310,15 +324,15 @@ namespace MiniLisp
 
                 try
                 {
-                    finalResult = (Values[0].Evaluate() as int?).Value < (Values[1].Evaluate() as int?).Value;
+                    finalResult = ConvertToInt(Values[0].Evaluate()) < ConvertToInt(Values[1].Evaluate());
                 }
-                catch (Exception ex)
+                catch (InvalidCastException ex)
                 {
                     Scanner.yyerror(TYPE_ERROR);
                     YYAbort();
                 }
 
-                return finalResult;
+                return new Bool(Scanner, finalResult);
             }
         }
 
@@ -343,18 +357,18 @@ namespace MiniLisp
 
                 try
                 {
-                    for(int i = 0; i < Values.Count - 1; i++)
+                    for (int i = 0; i < Values.Count - 1; i++)
                     {
-                        finalResult &= (Values[i].Evaluate() as int?).Value == (Values[i + 1].Evaluate() as int?).Value;
+                        finalResult &= ConvertToInt(Values[0].Evaluate()) == ConvertToInt(Values[1].Evaluate());
                     }
                 }
-                catch (Exception ex)
+                catch (InvalidCastException ex)
                 {
                     Scanner.yyerror(TYPE_ERROR);
                     YYAbort();
                 }
 
-                return finalResult;
+                return new Bool(Scanner, finalResult);
             }
         }
 
@@ -371,7 +385,7 @@ namespace MiniLisp
             {
                 bool finalResult = true;
 
-                if(Values.Count < 2)
+                if (Values.Count < 2)
                 {
                     Scanner.yyerror(SYNTAX_ERROR);
                     YYAbort();
@@ -379,18 +393,18 @@ namespace MiniLisp
 
                 try
                 {
-                    for (int i = 0; i < Values.Count; i++)
+                    foreach (var item in Values)
                     {
-                        finalResult &= (Values[i].Evaluate() as bool?).Value;
+                        finalResult &= ConvertToBool(item.Evaluate());
                     }
                 }
-                catch(Exception ex)
+                catch (InvalidCastException ex)
                 {
                     Scanner.yyerror(TYPE_ERROR);
                     YYAbort();
                 }
 
-                return finalResult;
+                return new Bool(Scanner, finalResult);
             }
         }
 
@@ -415,18 +429,18 @@ namespace MiniLisp
 
                 try
                 {
-                    for (int i = 0; i < Values.Count; i++)
+                    foreach (var item in Values)
                     {
-                        finalResult |= (Values[i].Evaluate() as bool?).Value;
+                        finalResult |= ConvertToBool(item.Evaluate());
                     }
                 }
-                catch (Exception ex)
+                catch (InvalidCastException ex)
                 {
                     Scanner.yyerror(TYPE_ERROR);
                     YYAbort();
                 }
 
-                return finalResult;
+                return new Bool(Scanner, finalResult);
             }
         }
 
@@ -451,15 +465,15 @@ namespace MiniLisp
 
                 try
                 {
-                    finalResult = !(Values[0].Evaluate() as bool?).Value;                    
+                    finalResult = !ConvertToBool(Values[0].Evaluate());
                 }
-                catch (Exception ex)
+                catch (InvalidCastException ex)
                 {
                     Scanner.yyerror(TYPE_ERROR);
                     YYAbort();
                 }
 
-                return finalResult;
+                return new Bool(Scanner, finalResult);
             }
         }
 
@@ -482,9 +496,9 @@ namespace MiniLisp
 
                 try
                 {
-                    return (Values[0].Evaluate() as bool?).Value ? Values[1].Evaluate() : Values[2].Evaluate();
+                    return ConvertToBool(Values[0].Evaluate()) ? Values[1].Evaluate() : Values[2].Evaluate();
                 }
-                catch(Exception ex)
+                catch (InvalidCastException ex)
                 {
                     Scanner.yyerror(TYPE_ERROR);
                     YYAbort();
@@ -515,10 +529,9 @@ namespace MiniLisp
 
                 try
                 {
-                    var env = GetCurrentEnvironment();
-                    env.Add(Name, Values[0]);
+                    Add(Name, Values[0]);
                 }
-                catch(Exception ex)
+                catch (ArgumentException ex)
                 {
                     Scanner.yyerror(REDEFINE_ERROR);
                     YYAbort();
@@ -541,18 +554,8 @@ namespace MiniLisp
 
             public override object Evaluate()
             {
-                try
-                {
-                    // TODO: Add inner defined helper function.
-                    return Body[0].Evaluate();
-                }
-                catch(Exception ex)
-                {
-                    Scanner.yyerror(TYPE_ERROR);
-                    YYAbort();
-                }
-
-                return null;
+                // TODO: Add inner defined helper function.
+                return Body[0].Evaluate();
             }
         }
 
@@ -578,7 +581,7 @@ namespace MiniLisp
             public override object Evaluate()
             {
                 if (FunctionName != null)
-                    Function = LookUp(FunctionName);
+                    Function = LookUp(FunctionName) as IAST;
 
                 var func = Function as Function;
 
@@ -588,14 +591,16 @@ namespace MiniLisp
                     YYAbort();
                 }
 
-                PushEnvironment(new Environment());
+                var env = new Environment();
 
-                for(int i = 0; i < Param.Count; i++)
+                for (int i = 0; i < Param.Count; i++)
                 {
                     var key = func.Param[i];
-                    var value = Param[i];
-                    Add(key, value);
+                    var value = Param[i].Evaluate() as IAST;
+                    env.Add(key, value);
                 }
+
+                PushEnvironment(env);
 
                 if (FunctionName != null)
                     Add(FunctionName, Function);
@@ -619,12 +624,11 @@ namespace MiniLisp
 
             public override object Evaluate()
             {
-                var ret = Value.Evaluate();
                 try
                 {
-                    Console.WriteLine((int)ret);
+                    Console.WriteLine(ConvertToInt(Value.Evaluate()));
                 }
-                catch(Exception ex)
+                catch (InvalidCastException ex)
                 {
                     Scanner.yyerror(TYPE_ERROR);
                     YYAbort();
@@ -647,9 +651,9 @@ namespace MiniLisp
                 var ret = Value.Evaluate();
                 try
                 {
-                    Console.WriteLine((bool)ret ? "#t" : "#f");
+                    Console.WriteLine(ConvertToBool(Value.Evaluate()) ? "#t" : "#f");
                 }
-                catch (Exception ex)
+                catch (InvalidCastException ex)
                 {
                     Scanner.yyerror(TYPE_ERROR);
                     YYAbort();

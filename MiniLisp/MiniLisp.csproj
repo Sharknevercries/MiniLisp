@@ -137,6 +137,9 @@
     <None Include="testcase\b4_1.lsp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="testcase\00_0.lsp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="testcase\b4_2.lsp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

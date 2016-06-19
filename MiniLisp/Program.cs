@@ -215,7 +215,7 @@ namespace MiniLisp
             }
         }
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public void TestFileb1_1()
         {
             using (StreamReader sr = new StreamReader("./testcase/b1_1.lsp"))
@@ -227,7 +227,7 @@ namespace MiniLisp
             }
         }
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public void TestFileb1_2()
         {
             using (StreamReader sr = new StreamReader("./testcase/b1_2.lsp"))
@@ -263,7 +263,7 @@ namespace MiniLisp
             }
         }
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public void TestFileb3_1()
         {
             using (StreamReader sr = new StreamReader("./testcase/b3_1.lsp"))
@@ -275,7 +275,7 @@ namespace MiniLisp
             }
         }
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public void TestFileb3_2()
         {
             using (StreamReader sr = new StreamReader("./testcase/b3_2.lsp"))
@@ -287,7 +287,7 @@ namespace MiniLisp
             }
         }
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public void TestFileb4_1()
         {
             using (StreamReader sr = new StreamReader("./testcase/b4_1.lsp"))
@@ -299,7 +299,7 @@ namespace MiniLisp
             }
         }
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public void TestFileb4_2()
         {
             using (StreamReader sr = new StreamReader("./testcase/b4_2.lsp"))
@@ -320,7 +320,7 @@ namespace MiniLisp
 
             try
             {
-                using(StreamReader sr = new StreamReader("./testcase/06_1.lsp"))
+                using(StreamReader sr = new StreamReader("./testcase/b1_2.lsp"))
                 {
                     parser.Parse(sr.ReadToEnd());
                 }

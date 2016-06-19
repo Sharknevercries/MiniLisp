@@ -17,7 +17,7 @@ namespace MiniLisp
 
             try
             {
-                using(StreamReader sr = new StreamReader("./testcase/b4_2.lsp"))
+                using(StreamReader sr = new StreamReader(args[0]))
                 {
                     parser.Parse(sr.ReadToEnd());
                 }

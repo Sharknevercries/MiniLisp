@@ -562,19 +562,24 @@ namespace MiniLisp
             {
                 Function = function;
                 Param = param;
+                FunctionName = null;
             }
 
             public FunctionCall(AbstractScanner<ValueType, LexLocation> scanner, string functionName, List<IAST> param) : base(scanner)
             {
-                Function = LookUp(functionName);
                 Param = param;
+                FunctionName = functionName;
             }
 
+            public string FunctionName;
             public IAST Function { get; set; }
             public List<IAST> Param { get; set; }
 
             public override object Evaluate()
             {
+                if (FunctionName != null)
+                    Function = LookUp(FunctionName);
+
                 var func = Function as Function;
 
                 if (Param.Count != func.Param.Count)
@@ -591,6 +596,9 @@ namespace MiniLisp
                     var value = Param[i];
                     Add(key, value);
                 }
+
+                if (FunctionName != null)
+                    Add(FunctionName, Function);
 
                 var ret = func.Evaluate();
 

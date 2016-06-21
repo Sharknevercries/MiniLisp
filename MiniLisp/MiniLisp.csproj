@@ -33,15 +33,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Label="YltParsers">
-    <Names>Calculator;MiniLisp</Names>
+    <Names>MiniLisp</Names>
   </PropertyGroup>
   <PropertyGroup Label="YltProperties">
     <YltTools>$(SolutionDir)packages\YaccLexTools.0.2.2\tools\</YltTools>
     <GplexTool>"$(YltTools)gplex.exe"</GplexTool>
     <GppgTool>"$(YltTools)gppg.exe"</GppgTool>
-  </PropertyGroup>
-  <PropertyGroup Label="GenerateCalculatorProperties">
-    <CalculatorParser>$(ProjectDir)Calculator</CalculatorParser>
   </PropertyGroup>
   <PropertyGroup Label="GenerateMiniLispProperties">
     <MiniLispParser>$(ProjectDir)MiniLisp</MiniLispParser>
@@ -175,17 +172,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeBuild" DependsOnTargets="YltBuildGen" />
-  <Target Name="YltBuildGen" DependsOnTargets="GenerateCalculator;GenerateMiniLisp" />
-  <Target Name="GenerateCalculator" Inputs="$(CalculatorParser).Language.analyzer.lex;$(CalculatorParser).Language.grammar.y" Outputs="$(CalculatorParser).Scanner.Generated.cs;$(CalculatorParser).Parser.Generated.cs">
-    <Message Text="Generating scanner for $(CalculatorParser) ..." />
-    <Exec Command="$(GplexTool) &quot;/out:$(CalculatorParser).Scanner.Generated.cs&quot; &quot;$(CalculatorParser).Language.analyzer.lex&quot;" WorkingDirectory="$(ProjectDir)" Outputs="$(GenDir)Scanner.cs">
-      <Output TaskParameter="Outputs" ItemName="CalculatorScanner" />
-    </Exec>
-    <Message Text="Generating parser for $(CalculatorParser) ..." />
-    <Exec Command="$(GppgTool) /no-lines /gplex &quot;$(CalculatorParser).Language.grammar.y&quot; &gt; &quot;$(CalculatorParser).Parser.Generated.cs&quot;" WorkingDirectory="$(ProjectDir)" Outputs="$(CalculatorParser).Parser.Generated.cs">
-      <Output TaskParameter="Outputs" ItemName="Calculator" />
-    </Exec>
-  </Target>
+  <Target Name="YltBuildGen" DependsOnTargets="GenerateMiniLisp" />
   <Target Name="GenerateMiniLisp" Inputs="$(MiniLispParser).Language.analyzer.lex;$(MiniLispParser).Language.grammar.y" Outputs="$(MiniLispParser).Scanner.Generated.cs;$(MiniLispParser).Parser.Generated.cs">
     <Message Text="Generating scanner for $(MiniLispParser) ..." />
     <Exec Command="$(GplexTool) &quot;/out:$(MiniLispParser).Scanner.Generated.cs&quot; &quot;$(MiniLispParser).Language.analyzer.lex&quot;" WorkingDirectory="$(ProjectDir)" Outputs="$(GenDir)Scanner.cs">
